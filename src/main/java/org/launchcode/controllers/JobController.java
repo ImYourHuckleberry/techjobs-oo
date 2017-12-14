@@ -1,6 +1,6 @@
 package org.launchcode.controllers;
 
-import org.launchcode.models.Job;
+import org.launchcode.models.*;
 import org.launchcode.models.forms.JobForm;
 import org.launchcode.models.data.JobData;
 import org.springframework.stereotype.Controller;
@@ -9,6 +9,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import javax.swing.text.Position;
 import javax.validation.Valid;
 
 /**
@@ -47,12 +48,35 @@ public class JobController {
         if (errors.hasErrors()) {
             return "new-job";
         }
+        Employer ourEmployer=null;
+        Location ourLocation=null;
+        CoreCompetency ourCoreCompetancy=null;
+        PositionType ourPosition=null;
+
+
+
+
+        for ( Employer employer : jobData.getEmployers().findAll()) {
+            if (jobForm.getEmployerId() == employer.getId())
+                ourEmployer = employer;
+        }
+
+        for ( Location location : jobData.getLocations().findAll()) {
+            if (jobForm.getLocationId() == location.getId())
+                ourLocation = location;
+        }
+
+        for ( PositionType positionTypes : jobData.getPositionTypes().findAll()) {
+            if (jobForm.getPositionTypeId() == positionTypes.getId())
+                ourPosition = positionTypes;
+        }
+        for ( CoreCompetency coreCompeteny : jobData.getCoreCompetencies().findAll()) {
+            if (jobForm.getCoreCompetencyId() == coreCompeteny.getId())
+                ourCoreCompetancy = coreCompeteny;
+        }
 
         Job newJob = new Job(jobForm.getName(),
-                jobData.findById(jobForm.getEmployerId()).getEmployer(),
-                jobData.findById(jobForm.getLocationId()).getLocation(),
-                jobData.findById(jobForm.getPositionTypeId()).getPositionType(),
-                jobData.findById(jobForm.getCoreCompetencyId()).getCoreCompetency());
+        ourEmployer, ourLocation, ourPosition, ourCoreCompetancy);
 
         jobData.add(newJob);
         model.addAttribute(newJob);
