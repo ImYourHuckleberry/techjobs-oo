@@ -77,7 +77,7 @@ public class JobForm {
         return locationId;
     }
 
-    public void setLocationId(int employerId) {
+    public void setLocationId(int locationId) {
         this.locationId = locationId;
     }
 
